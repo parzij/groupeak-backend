@@ -1,0 +1,1024 @@
+basePath: /api/v1
+definitions:
+  groupeak_internal_dto.ChangeEmailRequest:
+    properties:
+      new_email:
+        type: string
+      password:
+        type: string
+    type: object
+  groupeak_internal_dto.ChangePasswordRequest:
+    properties:
+      confirm_new:
+        type: string
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  groupeak_internal_dto.CreateEventRequest:
+    properties:
+      description:
+        type: string
+      end_at:
+        type: string
+      meeting_url:
+        type: string
+      participant_ids:
+        items:
+          type: integer
+        type: array
+      start_at:
+        type: string
+      title:
+        type: string
+    type: object
+  groupeak_internal_dto.CreateProjectRequest:
+    properties:
+      deadline_at:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  groupeak_internal_dto.CreateTaskRequest:
+    properties:
+      assignee_ids:
+        items:
+          type: integer
+        type: array
+      due_date:
+        type: string
+      priority:
+        $ref: '#/definitions/groupeak_internal_models.TaskPriority'
+      status:
+        $ref: '#/definitions/groupeak_internal_models.TaskStatus'
+      task_description:
+        type: string
+      task_name:
+        type: string
+    type: object
+  groupeak_internal_dto.InviteMemberRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  groupeak_internal_dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  groupeak_internal_dto.PatchProjectRequest:
+    properties:
+      clear_deadline_at:
+        type: boolean
+      deadline_at:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      project_name:
+        type: string
+    type: object
+  groupeak_internal_dto.PatchTaskRequest:
+    properties:
+      assignee_ids:
+        items:
+          type: integer
+        type: array
+      clear_due_at:
+        type: boolean
+      comments:
+        type: string
+      description:
+        type: string
+      due_at:
+        type: string
+      due_date:
+        type: string
+      priority:
+        $ref: '#/definitions/groupeak_internal_models.TaskPriority'
+      status:
+        $ref: '#/definitions/groupeak_internal_models.TaskStatus'
+      task_description:
+        type: string
+      task_name:
+        type: string
+      title:
+        type: string
+    type: object
+  groupeak_internal_dto.ReadNotificationRequest:
+    properties:
+      notification_ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  groupeak_internal_dto.RegisterRequest:
+    properties:
+      about:
+        type: string
+      avatar_url:
+        type: string
+      birth_date:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      position:
+        type: string
+    type: object
+  groupeak_internal_dto.ReviewTaskRequest:
+    properties:
+      comment:
+        type: string
+      decision:
+        type: string
+      due_at:
+        type: string
+    type: object
+  groupeak_internal_dto.UpdateEventRequest:
+    properties:
+      description:
+        type: string
+      end_at:
+        type: string
+      meeting_url:
+        type: string
+      participant_ids:
+        items:
+          type: integer
+        type: array
+      start_at:
+        type: string
+      title:
+        type: string
+    type: object
+  groupeak_internal_dto.UpdateProfileRequest:
+    properties:
+      about:
+        type: string
+      avatar_url:
+        type: string
+      birth_date:
+        type: string
+      full_name:
+        type: string
+      position:
+        type: string
+    type: object
+  groupeak_internal_models.TaskPriority:
+    enum:
+    - low
+    - medium
+    - high
+    type: string
+    x-enum-varnames:
+    - TaskPriorityLow
+    - TaskPriorityMedium
+    - TaskPriorityHigh
+  groupeak_internal_models.TaskStatus:
+    enum:
+    - todo
+    - in_progress
+    - done
+    - postponed
+    - in_review
+    type: string
+    x-enum-varnames:
+    - TaskStatusTodo
+    - TaskStatusInProgress
+    - TaskStatusDone
+    - TaskStatusPostponed
+    - TaskStatusReview
+  internal_handlers.acceptInviteRequest:
+    properties:
+      token:
+        type: string
+    type: object
+host: localhost:3030
+info:
+  contact: {}
+  description: REST API бэкенда для мобильного приложения Groupeak (управление проектами
+    и задачами).
+  title: Groupeak API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Учетные данные
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверные данные
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Авторизация пользователя
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Неверный формат запроса
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /events/my:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Мои события
+      tags:
+      - events
+  /notifications:
+    get:
+      parameters:
+      - description: Лимит
+        in: query
+        name: limit
+        type: integer
+      - description: Отступ
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Список уведомлений
+      tags:
+      - notifications
+  /notifications/read:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Массив ID (пусто для всех)
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.ReadNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Отметить как прочитанные
+      tags:
+      - notifications
+  /notifications/unread-count:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+      security:
+      - Bearer: []
+      summary: Количество непрочитанных уведомлений
+      tags:
+      - notifications
+  /projects:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Список проектов пользователя
+      tags:
+      - projects
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные проекта
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.CreateProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Создание проекта
+      tags:
+      - projects
+  /projects/{projectID}:
+    delete:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - Bearer: []
+      summary: Удаление проекта
+      tags:
+      - projects
+    get:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Получение проекта по ID
+      tags:
+      - projects
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: Обновляемые поля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.PatchProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Обновление проекта
+      tags:
+      - projects
+  /projects/{projectID}/events:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: Данные события
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.CreateEventRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Создать событие/встречу
+      tags:
+      - events
+  /projects/{projectID}/events/{eventID}:
+    delete:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID События
+        in: path
+        name: eventID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Удалить событие
+      tags:
+      - events
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID События
+        in: path
+        name: eventID
+        required: true
+        type: integer
+      - description: Обновляемые поля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.UpdateEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Обновить событие
+      tags:
+      - events
+  /projects/{projectID}/invites:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: Данные инвайта
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.InviteMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Приглашение в проект
+      tags:
+      - projects
+  /projects/{projectID}/members:
+    get:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Список участников проекта
+      tags:
+      - projects
+  /projects/{projectID}/members/{userID}:
+    delete:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Пользователя
+        in: path
+        name: userID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - Bearer: []
+      summary: Удаление участника
+      tags:
+      - projects
+  /projects/{projectID}/tasks:
+    get:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: Лимит
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение
+        in: query
+        name: offset
+        type: integer
+      - description: Категория (current, review, inactive)
+        in: query
+        name: category
+        type: string
+      - description: ID исполнителей через запятую
+        in: query
+        name: assignees
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Список задач проекта (с фильтрами)
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: Данные задачи
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Создание задачи
+      tags:
+      - tasks
+  /projects/{projectID}/tasks/{taskID}:
+    delete:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Задачи
+        in: path
+        name: taskID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - Bearer: []
+      summary: Удаление задачи
+      tags:
+      - tasks
+    get:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Задачи
+        in: path
+        name: taskID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Получение задачи
+      tags:
+      - tasks
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Задачи
+        in: path
+        name: taskID
+        required: true
+        type: integer
+      - description: Данные
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.PatchTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Обновление задачи
+      tags:
+      - tasks
+  /projects/{projectID}/tasks/{taskID}/review:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Задачи
+        in: path
+        name: taskID
+        required: true
+        type: integer
+      - description: Решение
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.ReviewTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Проверить задачу (аппрув или реджект)
+      tags:
+      - tasks
+  /projects/{projectID}/tasks/{taskID}/submit:
+    post:
+      parameters:
+      - description: ID Проекта
+        in: path
+        name: projectID
+        required: true
+        type: integer
+      - description: ID Задачи
+        in: path
+        name: taskID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Отправить задачу на ревью
+      tags:
+      - tasks
+  /projects/invites/accept:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Токен
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handlers.acceptInviteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Принять приглашение
+      tags:
+      - projects
+  /tasks:
+    get:
+      parameters:
+      - description: ID Проекта
+        in: query
+        name: project_id
+        type: integer
+      - description: Приоритет (low, medium, high)
+        in: query
+        name: priority
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Глобальная фильтрация задач
+      tags:
+      - tasks
+  /tasks/my:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Мои задачи
+      tags:
+      - tasks
+  /tasks/nearest:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Ближайшие задачи (по дедлайну)
+      tags:
+      - tasks
+  /user/avatar:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Удаление аватара
+      tags:
+      - user
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Файл изображения (jpg, png, heic)
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Загрузка аватара
+      tags:
+      - user
+  /user/change-email:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для смены email
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.ChangeEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Смена email
+      tags:
+      - user
+  /user/change-password:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для смены пароля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Смена пароля
+      tags:
+      - user
+  /user/profile:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Получение профиля пользователя
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные профиля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/groupeak_internal_dto.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - Bearer: []
+      summary: Обновление профиля
+      tags:
+      - user
+securityDefinitions:
+  Bearer:
+    description: 'Введи токен в формате: Bearer {твой_jwt_токен}'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
