@@ -1,0 +1,168 @@
+# ---------------------------
+# Global folders to ignore
+# ---------------------------
+.vscode/
+.idea/
+.assets/
+.DS_Store
+Thumbs.db
+*.log
+logs/
+tmp/
+temp/
+cache/
+.env
+.env.*
+*.pid
+*.seed
+*.bak
+
+
+# venv
+venv/
+env/
+.env/
+.venv/
+
+# ---------------------------
+# Golang
+# ---------------------------
+bin/
+build/
+dist/
+*.exe
+*.test
+*.out
+go.work
+go.work.sum
+go.mod 
+go.sum
+
+# Go modules
+vendor/
+
+
+# ---------------------------
+# Java / Kotlin
+# ---------------------------
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+target/
+gradle/
+.gradle/
+build/
+
+# Maven
+.mvn/
+mvnw.cmd
+mvnw
+
+
+# Visual Studio
+.vs/
+*.suo
+*.cache
+*.userprefs
+
+# Rider / ReSharper
+.idea/
+*.DotSettings.user
+
+# ---------------------------
+# Docker
+# ---------------------------
+docker-data/
+docker-compose.override.yml
+.docker/
+*.tar
+
+# ---------------------------
+# Databases
+# ---------------------------
+*.sqlite
+*.sqlite3
+*.db
+*.sql.journal
+*.mdb
+*.log
+
+# ---------------------------
+# Images / Media Cache
+# ---------------------------
+*.psd
+*.ai
+*.xcf
+*.blend1
+*.blend2
+*.kra
+*.tmp
+*.orig
+
+# ---------------------------
+# OS-specific garbage
+# ---------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# ---------------------------
+# JetBrains
+# ---------------------------
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ---------------------------
+# Figma / Design tools
+# ---------------------------
+*.fig
+export/
+design/
+renders/
+
+# ---------------------------
+# Unity / Unreal Engine
+# ---------------------------
+Library/
+Temp/
+Obj/
+Logs/
+Build/
+Builds/
+UserSettings/
+MemoryCaptures/
+*.unitypackage
+
+# Unreal
+Saved/
+Intermediate/
+DerivedDataCache/
+
+# ---------------------------
+# Archives
+# ---------------------------
+*.zip
+*.rar
+*.7z
+*.gz
+*.tar
+*.tgz
+
+# ---------------------------
+# Markdown / notes tools
+# ---------------------------
+.obsidian/
+notes/.cache/
